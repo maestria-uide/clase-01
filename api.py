@@ -2,6 +2,7 @@ import json
 import requests
 from flask import Flask, Response, request
 
+from country import Country
 from product import Product
 from users import Users
 
@@ -36,6 +37,23 @@ def getuser():
     lista_serializadausuario = json.dumps(lista_usuarios)
 
     return Response(lista_serializadausuario, mimetype="application/json")
+
+@app.route("/getcountry")
+def getcountry():
+    wallapop_url3 =f"https://restcountries.com/v3.1/all"
+    retorno = requests.get(wallapop_url3)
+    paises = []
+    for pais in retorno.json():
+        p = pais["name"]
+        paises.append(Country(name=p["common"]))
+    print("pais")
+    lista_paises= [a.to_dictr() for a in paises]
+    lista_serializadapais = json.dumps(lista_paises)
+
+    return Response(lista_serializadapais, mimetype="application/json")
+
+
+
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000)
