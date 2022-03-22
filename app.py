@@ -1,8 +1,9 @@
 import json
 import os
 
+import flask
 import requests
-from flask import Flask, Response, request
+from flask import Flask, Response, request,render_template
 
 from ingredients import Ingredients
 from country import Country
@@ -16,9 +17,9 @@ from rates import Rates
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.route("/", methods=['GET'])
 def index():
-    return "<h1>Grupo 5 deploy</h1>"
+    return render_template('index.html')
 
 
 @app.route("/search")
