@@ -9,6 +9,7 @@ from product import Product
 from users import Users
 from books import Books
 from post import Post
+from rates import Rates
 
 app = Flask(__name__)
 
@@ -106,6 +107,19 @@ def getpost():
     lista_serializadapost = json.dumps(lista_posts)
 
     return Response(lista_serializadapost, mimetype="application/json")
+
+@app.route("/getrates")
+def getrates():
+    url = f"https://api.coingecko.com/api/v3/exchange_rates"
+    retorno = requests.get(url)
+    objeto= retorno.json().get("rates");
+    btc= objeto["btc"];
+    objetoRetorno=Rates(name=btc["name"],unit=btc["unit"],value=btc["value"])
+    rates=[]
+    rates.append(objetoRetorno);
+    lista_rates=[r.to_dictr() for r in rates]
+    lista_serializada=json.dumps(lista_rates);
+    return Response(lista_serializada, mimetype="application/json")
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000)
