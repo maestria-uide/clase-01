@@ -3,12 +3,14 @@ import requests
 from flask import Flask, Response, request
 
 from product import Product
+from users import Users
 
 app = Flask(__name__)
 
 
 
 @app.route("/buscar")
+
 def buscar():
     argumentos = request.args.get('keywords', '')
     wallapop_url = f"https://api.wallapop.com/api/v3/general/search?keywords={argumentos}%20&category_ids=12900&filters_source=seo_landing&longitude=-3.69196&latitude=40.41956&order_by=closest"
@@ -21,8 +23,19 @@ def buscar():
     lista_productos= [p.to_dict() for p in productos]
     lista_serializada= json.dumps(lista_productos)
 
-    return Response(lista_serializada,mimetype="application/json")
+    return Response(lista_serializada, mimetype="application/json")
+@app.route("/getuser")
+def getuser():
+    wallapop_url2 =f"https://jsonplaceholder.typicode.com/users"
+    retorno = requests.get(wallapop_url2)
+    usuarios = []
+    for usuario in retorno.json():
+        usuarios.append(Users(name=usuario["name"], username=usuario["username"], email=usuario["email"]))
+    print("usuario")
+    lista_usuarios= [u.to_dictr() for u in usuarios]
+    lista_serializadausuario = json.dumps(lista_usuarios)
 
+    return Response(lista_serializadausuario, mimetype="application/json")
 
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=5000)
