@@ -3,6 +3,7 @@ import requests
 from flask import Flask, Response, request
 
 from country import Country
+from game import Game
 from product import Product
 from users import Users
 
@@ -52,7 +53,18 @@ def getcountry():
 
     return Response(lista_serializadapais, mimetype="application/json")
 
+@app.route("/getgames")
+def getgames():
+    wallapop_url4 = f"https://www.freetogame.com/api/games"
+    retorno = requests.get(wallapop_url4)
+    games = []
+    for game in retorno.json():
+        games.append(Game(title=game["title"]))
+    print("games")
+    lista_games= [a.to_dictr() for a in games]
+    lista_serializadagames = json.dumps(lista_games)
 
+    return Response(lista_serializadagames, mimetype="application/json")
 
 
 if __name__ == "__main__":
