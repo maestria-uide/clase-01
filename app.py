@@ -1,7 +1,5 @@
 import json
 import os
-
-import flask
 import requests
 from flask import Flask, Response, request,render_template
 
