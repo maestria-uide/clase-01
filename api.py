@@ -2,6 +2,7 @@ import json
 import requests
 from flask import Flask, Response, request
 
+from ingredients import Ingredients
 from country import Country
 from game import Game
 from product import Product
@@ -65,6 +66,19 @@ def getgames():
     lista_serializadagames = json.dumps(lista_games)
 
     return Response(lista_serializadagames, mimetype="application/json")
+
+
+@app.route("/getingredients")
+def getingredients():
+    wallapop_url5 = f"https://www.thecocktaildb.com/api/json/v1/1/search.php?f=a"
+    retorno = requests.get(wallapop_url5)
+    ingredients = []
+    for ingredient in retorno.json().get("drinks"):
+        ingredients.append(Ingredients(strCategory=ingredient["strCategory"]))
+    lista_ingredients= [a.to_dictr() for a in ingredients]
+    lista_serializadaingredients = json.dumps(lista_ingredients)
+
+    return Response(lista_serializadaingredients, mimetype="application/json")
 
 
 if __name__ == "__main__":
