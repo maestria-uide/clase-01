@@ -7,6 +7,7 @@ from country import Country
 from game import Game
 from product import Product
 from users import Users
+from books import Books
 
 app = Flask(__name__)
 
@@ -79,6 +80,19 @@ def getingredients():
     lista_serializadaingredients = json.dumps(lista_ingredients)
 
     return Response(lista_serializadaingredients, mimetype="application/json")
+
+
+@app.route("/getbooks")
+def getbooks():
+    wallapop_url6 =f"https://jsonplaceholder.typicode.com/todos/"
+    retorno = requests.get(wallapop_url6)
+    libros = []
+    for libro in retorno.json():
+        libros.append(Books(title=libro["title"]))
+    lista_libros= [a.to_dictr() for a in libros]
+    lista_serializadalibro = json.dumps(lista_libros)
+
+    return Response(lista_serializadalibro, mimetype="application/json")
 
 
 if __name__ == "__main__":
